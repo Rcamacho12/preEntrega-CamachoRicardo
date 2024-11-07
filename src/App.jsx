@@ -5,8 +5,9 @@ import NavBar from './components/NavBar/NavBar'
 function App() {
   return (
     <>
+      
       <NavBar/>
-      <ItemListContainer/>
+      <ItemListContainer greeting="Bienvenido a la Libreria"/>
     </>
   )
 }
