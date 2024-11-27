@@ -1,23 +1,30 @@
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getProductByID } from "../../../asyncMock";
-import { useEffect, useState } from "react";
-import ItemDetail from "../ItemDetail/ItemDetail";
-export default function ItemDetailContainer() {
-  const [product, setProduct] = useState({})
-  const {productId} = useParams()
+import { getProducts } from "../../../asyncMock";
 
-  useEffect(()=>{
-    getProductByID(productId)
-      .then((resp) => {
-        setProduct(resp)
+export default function ItemDetailContainer() {
+  const [product, setProduct] = useState(null);
+  const { itemId } = useParams();
+
+  useEffect(() => {
+    getProducts()
+      .then((products) => {
+        const foundProduct = products.find((p) => p.id === parseInt(itemId));
+        setProduct(foundProduct);
       })
-  }, [productId])
+      .catch((error) => console.error("Error al cargar el producto:", error));
+  }, [itemId]);
+
+  if (!product) {
+    return <div>Cargando producto...</div>;
+  }
 
   return (
-    <div>
-      <h2>Detalle del producto</h2>
-      <hr />
-      <ItemDetail {...product} />
+    <div className="container my-4">
+      <h2>{product.name}</h2>
+      <p>Precio: ${product.price}</p>
+      <p>Categoría: {product.category}</p>
+      <button className="btn btn-primary">Agregar al carrito</button>
     </div>
   );
 }
