@@ -22,6 +22,12 @@ export default function ItemDetailContainer() {
     return (
         <div className="container my-4">
         <h2>{product.name}</h2>
+        <img
+            src={product.img}
+            className="card-img-top"
+            alt={product.name}
+            style={{ height: "300px", objectFit: "cover" }}
+        />
         <p>Precio: ${product.price}</p>
         <p>Categoría: {product.category}</p>
         <button className="btn btn-primary">Agregar al carrito</button>

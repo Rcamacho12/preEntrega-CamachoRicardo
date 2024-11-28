@@ -5,7 +5,7 @@ import ItemDetailContainer from "./components/ItemDetailContainer/ItemDetailCont
 
 function App() {
   return (
-    <BrowserRouter basename="/preEntrega-CamachoRicardo">
+    <BrowserRouter >
       <NavBar title={"TemaUno"} />
       <Routes>
         <Route path="/" element={<ItemListContainer />} />

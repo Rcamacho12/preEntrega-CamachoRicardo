@@ -22,7 +22,7 @@ export default function ItemDetail() {
         <h2 className="text-center mb-4">Detalles del producto</h2>
         <div className="card mx-auto" style={{ maxWidth: "540px" }}>
             <img
-            src={product.imagen}
+            src={product.img}
             className="card-img-top"
             alt={product.name}
             style={{ height: "300px", objectFit: "cover" }}
