@@ -3,10 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://Rcamacho12.github.io/preEntrega-CamachoRicardo",
+  "homepage": "https://rcamacho12.github.io/preEntrega-CamachoRicardo" ,
+
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --base=/preEntrega-CamachoRicardo/",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
