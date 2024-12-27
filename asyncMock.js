@@ -1,3 +1,7 @@
+import { writeBatch, collection, doc } from "firebase/firestore";
+
+import { db } from "./services/firebase";
+
 const products = [
     {
         id: 1,
@@ -220,3 +224,5 @@ export const getProductByID = (productId) => {
         }, 2500);
     });
 };
+
+
