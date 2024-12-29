@@ -1,19 +1,22 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../services/firebase";
+import { db } from "../../services/firebase/index.js";
+import { useCart } from "../Context/CartContext.jsx"; // Importa el contexto
+import ItemDetail from "../ItemDetail/ItemDetail";
 
-export default function ItemDetailContainer({ onAddToCart }) {
+export default function ItemDetailContainer() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [quantity, setQuantity] = useState(1); // Estado para la cantidad
+  const [quantity, setQuantity] = useState(1);
   const { itemId } = useParams();
+  const { addToCart } = useCart(); // Accede a la función para agregar al carrito
 
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
       try {
-        const productRef = doc(db, "products", itemId); // Referencia al documento por ID
+        const productRef = doc(db, "products", itemId);
         const productSnap = await getDoc(productRef);
 
         if (productSnap.exists()) {
@@ -31,16 +34,14 @@ export default function ItemDetailContainer({ onAddToCart }) {
     fetchProduct();
   }, [itemId]);
 
-  // Funciones para incrementar y decrementar cantidad
   const handleIncrement = () => setQuantity((prev) => prev + 1);
   const handleDecrement = () => {
     if (quantity > 1) setQuantity((prev) => prev - 1);
   };
 
-  // Función para agregar al carrito
   const handleAddToCart = () => {
-    if (onAddToCart && product) {
-      onAddToCart({ ...product, quantity });
+    if (product) {
+      addToCart({ ...product, quantity });
       alert("Producto agregado al carrito");
     }
   };
@@ -60,50 +61,12 @@ export default function ItemDetailContainer({ onAddToCart }) {
   }
 
   return (
-    <div className="container my-4">
-      <div className="card shadow-sm p-3 mb-5 bg-body-tertiary rounded">
-        <div className="row g-0">
-          {/* Imagen del producto */}
-          <div className="col-md-4">
-            <img
-              src={product.img || "https://via.placeholder.com/300"}
-              className="img-fluid rounded-start"
-              alt={product.name}
-              style={{ objectFit: "cover", height: "100%" }}
-            />
-          </div>
-
-          {/* Detalles del producto */}
-          <div className="col-md-8">
-            <div className="card-body d-flex flex-column justify-content-between">
-              <h2 className="card-title mb-3">{product.name}</h2>
-              <p className="card-text mb-2">
-                Precio: <strong>${product.price}</strong>
-              </p>
-              <p className="card-text mb-2">Categoría: {product.category}</p>
-
-              {/* Controles de cantidad */}
-              <div className="d-flex align-items-center my-3">
-                <button className="btn btn-danger me-2" onClick={handleDecrement}>
-                  -
-                </button>
-                <span className="fs-5 mx-2">{quantity}</span>
-                <button className="btn btn-success ms-2" onClick={handleIncrement}>
-                  +
-                </button>
-              </div>
-
-              {/* Botón agregar al carrito */}
-              <button
-                className="btn btn-primary mt-3"
-                onClick={handleAddToCart}
-              >
-                Agregar al carrito
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <ItemDetail
+      product={product}
+      quantity={quantity}
+      onIncrement={handleIncrement}
+      onDecrement={handleDecrement}
+      onAddToCart={handleAddToCart}
+    />
   );
 }

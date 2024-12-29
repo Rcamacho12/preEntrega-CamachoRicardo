@@ -3,12 +3,14 @@ import { createContext, useContext, useState } from "react";
 // Crear el contexto
 const CartContext = createContext();
 
-// Hook para usar el contexto más fácilmente
-export const useCart = () => useContext(CartContext);
+// Hook personalizado para usar el contexto
+export const useCart = () => {
+  return useContext(CartContext);
+};
 
 // Proveedor del contexto
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]); // Estado para los productos en el carrito
+  const [cart, setCart] = useState([]);
 
   // Función para agregar un producto al carrito
   const addToCart = (product) => {
@@ -20,17 +22,42 @@ export const CartProvider = ({ children }) => {
             ? { ...item, quantity: item.quantity + product.quantity }
             : item
         );
-      } else {
-        return [...prevCart, product];
       }
+      return [...prevCart, product];
     });
   };
 
-  // Calcular el total de productos en el carrito
-  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+  // Función para eliminar un producto del carrito
+  const removeFromCart = (productId) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+  };
+
+  // Función para vaciar el carrito
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  // Función para obtener la cantidad total de productos en el carrito
+  const getTotalQuantity = () => {
+    return cart.reduce((total, item) => total + item.quantity, 0);
+  };
+
+  // Función para obtener el precio total del carrito
+  const getTotalPrice = () => {
+    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, totalItems }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        clearCart,
+        getTotalQuantity,
+        getTotalPrice,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
