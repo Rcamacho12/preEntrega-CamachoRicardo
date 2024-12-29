@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../services/firebase";
 
-export default function ItemDetailContainer() {
+export default function ItemDetailContainer({ onAddToCart }) {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1); // Estado para la cantidad
@@ -37,6 +37,14 @@ export default function ItemDetailContainer() {
     if (quantity > 1) setQuantity((prev) => prev - 1);
   };
 
+  // Función para agregar al carrito
+  const handleAddToCart = () => {
+    if (onAddToCart && product) {
+      onAddToCart({ ...product, quantity });
+      alert("Producto agregado al carrito");
+    }
+  };
+
   if (loading) {
     return (
       <div className="text-center my-4">
@@ -58,7 +66,7 @@ export default function ItemDetailContainer() {
           {/* Imagen del producto */}
           <div className="col-md-4">
             <img
-              src={product.img}
+              src={product.img || "https://via.placeholder.com/300"}
               className="img-fluid rounded-start"
               alt={product.name}
               style={{ objectFit: "cover", height: "100%" }}
@@ -69,7 +77,9 @@ export default function ItemDetailContainer() {
           <div className="col-md-8">
             <div className="card-body d-flex flex-column justify-content-between">
               <h2 className="card-title mb-3">{product.name}</h2>
-              <p className="card-text mb-2">Precio: <strong>${product.price}</strong></p>
+              <p className="card-text mb-2">
+                Precio: <strong>${product.price}</strong>
+              </p>
               <p className="card-text mb-2">Categoría: {product.category}</p>
 
               {/* Controles de cantidad */}
@@ -84,7 +94,12 @@ export default function ItemDetailContainer() {
               </div>
 
               {/* Botón agregar al carrito */}
-              <button className="btn btn-primary mt-3">Agregar al carrito</button>
+              <button
+                className="btn btn-primary mt-3"
+                onClick={handleAddToCart}
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
         </div>
