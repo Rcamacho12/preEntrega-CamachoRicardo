@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../services/firebase/index.js";
-import { useCart } from "../Context/CartContext.jsx"; // Importa el contexto
+import { useCart } from "../Context/CartContext.jsx";
 import ItemDetail from "../ItemDetail/ItemDetail";
 
 export default function ItemDetailContainer() {
@@ -10,7 +10,7 @@ export default function ItemDetailContainer() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const { itemId } = useParams();
-  const { addToCart } = useCart(); // Accede a la función para agregar al carrito
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -22,10 +22,10 @@ export default function ItemDetailContainer() {
         if (productSnap.exists()) {
           setProduct({ id: productSnap.id, ...productSnap.data() });
         } else {
-          console.error("No se encontró el producto.");
+          console.error("Producto no encontrado.");
         }
       } catch (error) {
-        console.error("Error al cargar el producto desde Firebase:", error);
+        console.error("Error al obtener el producto:", error);
       } finally {
         setLoading(false);
       }
@@ -42,7 +42,6 @@ export default function ItemDetailContainer() {
   const handleAddToCart = () => {
     if (product) {
       addToCart({ ...product, quantity });
-      alert("Producto agregado al carrito");
     }
   };
 
@@ -62,7 +61,10 @@ export default function ItemDetailContainer() {
 
   return (
     <ItemDetail
-      product={product}
+      name={product.name}
+      img={product.img}
+      price={product.price}
+      description={product.description}
       quantity={quantity}
       onIncrement={handleIncrement}
       onDecrement={handleDecrement}
